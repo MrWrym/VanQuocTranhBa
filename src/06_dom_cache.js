@@ -4,6 +4,7 @@
     sidebar: document.querySelector("#sidebar"),
     mainTitle: document.querySelector("#mainTitle"),
     mainHint: document.querySelector("#mainHint"),
+    mainProgress: document.querySelector("#mainProgress"),
     main: document.querySelector("#main"),
     right: document.querySelector("#right"),
 

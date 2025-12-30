@@ -1,40 +1,32 @@
 // ===== Main render (only on navigation/actions) =====
-  function mainProgressFrameHTML(){
+  function descHTML(desc){
+    if(!desc) return "";
+    const lead = desc.lead ? `<div class="tiny">${desc.lead}</div>` : "";
+    const bullets = (desc.bullets||[]).map(t=>`<div class="tiny">• ${t}</div>`).join("");
+    const upgrade = desc.upgrade ? `<div class="divider"></div><div class="tiny"><b>Ghi chú nâng cấp:</b> ${desc.upgrade}</div>` : "";
     return `
-      <div class="card">
-        <h3>${icoTok("scroll")} Tiến độ</h3>
-        <div class="progressGrid">
-          <div class="progBox">
-            <div class="tiny" style="display:flex; align-items:center; gap:8px;"><span class="fx fx-build is-hidden" id="fx-build" title="Đang nâng cấp">⚒️</span><b>Xây dựng</b>: <span id="m-build-label">—</span></div>
-            <div class="progress" style="margin-top:6px"><i id="m-build-bar"></i></div>
-          </div>
-          <div class="progBox">
-            <div class="tiny" style="display:flex; align-items:center; gap:8px;"><span class="fx fx-train is-hidden" id="fx-train" title="Đang huấn luyện">⚔️</span><b>Huấn luyện</b>: <span id="m-train-label">—</span></div>
-            <div class="progress" style="margin-top:6px"><i id="m-train-bar"></i></div>
-          </div>
-        </div>
-      </div>
+      ${lead}
+      <div style="margin-top:8px">${bullets}</div>
+      ${upgrade}
     `;
   }
 
   function renderMain(){
     const v = state.view;
 
-    dom.mainBuildFill = null;
-    dom.mainBuildLabel = null;
-    dom.mainTrainFill = null;
-    dom.mainTrainLabel = null;
-
-    dom.fxBuild = null;
-    dom.fxTrain = null;
+    // Mount & toggle Progress component (separate UI + logic)
+    if(typeof mountMainProgress === "function" && dom.mainProgress && !dom.mainBuildFill){
+      mountMainProgress();
+    }
+    if(typeof showMainProgress === "function"){
+      showMainProgress(v==="village" || v.startsWith("b:") || v.startsWith("t:"));
+    }
 
     if(v==="village"){
       dom.mainTitle.innerHTML = `${icoTok("home")} Làng`;
       renderEmoji(dom.mainTitle);
       dom.mainHint.textContent = "Xây công trình, huấn luyện quân, hành quân chiếm ô / đánh kẻ địch.";
       dom.main.innerHTML = `
-        ${mainProgressFrameHTML()}
-
         <div class="card">
           <h3>${icoTok("scroll")} Tổng quan</h3>
           <div class="tiny">Tổng cấp: <b>${totalLevel()}</b> · Quân: <b>${totalArmy()}</b> · Hành quân: <b>${state.marches.length}</b></div>
@@ -44,13 +36,6 @@
       `;
 
       renderEmoji(dom.main);
-
-      dom.mainBuildLabel = document.querySelector("#m-build-label");
-      dom.mainBuildFill  = document.querySelector("#m-build-bar");
-      dom.mainTrainLabel = document.querySelector("#m-train-label");
-      dom.mainTrainFill  = document.querySelector("#m-train-bar");
-      dom.fxBuild = document.querySelector("#fx-build");
-      dom.fxTrain = document.querySelector("#fx-train");
       return;
     }
 
@@ -76,11 +61,11 @@
       const can = !busy && canPay(cost);
 
       dom.main.innerHTML = `
-        ${mainProgressFrameHTML()}
-
         <div class="card">
           <h3>${icoTok("up")} Chi tiết công trình</h3>
           <div class="tiny">Cấp hiện tại: <b>${lv}</b></div>
+          <div class="divider"></div>
+          ${descHTML(b.desc)}
           <div class="divider"></div>
           <div class="tiny" data-tip="Lợi ích nâng cấp">${benefit}</div>
           <div class="divider"></div>
@@ -98,13 +83,6 @@
       `;
 
       renderEmoji(dom.main);
-
-      dom.mainBuildLabel = document.querySelector("#m-build-label");
-      dom.mainBuildFill  = document.querySelector("#m-build-bar");
-      dom.mainTrainLabel = document.querySelector("#m-train-label");
-      dom.mainTrainFill  = document.querySelector("#m-train-bar");
-      dom.fxBuild = document.querySelector("#fx-build");
-      dom.fxTrain = document.querySelector("#fx-train");
       return;
     }
 
@@ -130,11 +108,11 @@
       };
 
       dom.main.innerHTML = `
-        ${mainProgressFrameHTML()}
-
         <div class="card">
           <h3>${icoTok("shield")} Chi tiết huấn luyện</h3>
           <div class="tiny"><b>${u.name}</b> (Công ${u.atk} / Thủ ${u.def})</div>
+          <div class="divider"></div>
+          ${descHTML(tb.desc)}
           <div class="divider"></div>
           <div class="tiny">Chi phí / 1 quân: ${ico("wood",true)} ${u.cost.wood} · ${ico("clay",true)} ${u.cost.clay} · ${ico("iron",true)} ${u.cost.iron} · ${ico("crop",true)} ${u.cost.crop} · 3 giây / quân</div>
 
@@ -164,14 +142,6 @@
       `;
 
       renderEmoji(dom.main);
-
-      dom.mainBuildLabel = document.querySelector("#m-build-label");
-      dom.mainBuildFill  = document.querySelector("#m-build-bar");
-      dom.mainTrainLabel = document.querySelector("#m-train-label");
-      dom.mainTrainFill  = document.querySelector("#m-train-bar");
-
-      dom.fxBuild = document.querySelector("#fx-build");
-      dom.fxTrain = document.querySelector("#fx-train");
       // Patch-in-place (no rerender on slider move)
       const slider = document.querySelector("#trainSlider");
       const qtyEl = document.querySelector("#trainQty");
