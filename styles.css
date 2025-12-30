@@ -166,6 +166,62 @@
     */
     .bd{ padding:12px; min-height:0; flex: 1 1 auto; }
 
+    /* Main progress dock (global status bar, independent) */
+    .midCol{
+      display:flex;
+      flex-direction:column;
+      gap: 18px;
+      min-height: 0;
+      height: 100%;
+    }
+    .midCol .mainBodyPanel{ flex: 1 1 auto; min-height: 0; }
+    .statusDock{
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 12px;
+      border-radius: var(--r14);
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border: 1px solid var(--border2);
+      box-shadow: var(--shadow2);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    /* Avoid double "card inside bar" look */
+    .statusDock .card{
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+#mainProgress{ position: relative; z-index: 3; }
+    .statusDock .card{
+      margin: 0;
+      background: rgba(255,255,255,.50);
+      border: 1px solid rgba(191,165,121,.60);
+      border-radius: 14px;
+      box-shadow: 0 8px 18px rgba(40,30,20,.10);
+    }
+    .statusDock h3{
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: .9px;
+      text-transform: uppercase;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .statusDock .progressGrid{ gap: 12px; }
+    .statusDock .progBox{
+      background: rgba(255,255,255,.35);
+      border: 1px solid rgba(191,165,121,.35);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .noTopPad{ padding-top: 0 !important; }
+
     /* Cards */
     .card{
       background: rgba(255,255,255,.35);

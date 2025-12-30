@@ -135,15 +135,21 @@
       <div class="bd nav scroll" id="sidebar"></div>
     </div>
 
-    <div class="panel">
-      <div class="hd">
-        <div class="title" id="mainTitle"></div>
-        <div class="tiny" id="mainHint"></div>
+    <div class="midCol">
+      <!-- Progress component (global status bar, independent) -->
+      <div class="statusDock statusBar" id="mainProgress"></div>
+
+      <!-- Building panel: title + details in ONE container -->
+      <div class="panel mainBodyPanel">
+        <div class="hd">
+          <div class="title" id="mainTitle"></div>
+          <div class="tiny" id="mainHint"></div>
+        </div>
+        <div class="bd scroll" id="main"></div>
       </div>
-      <div class="bd scroll" id="main"></div>
     </div>
 
-    <div class="panel">
+<div class="panel">
       <div class="hd">
         <div class="title"><span class="iTok" aria-hidden="true"><span class="i">🎒</span></span> Kho</div>
       </div>
@@ -165,6 +171,7 @@
   <script src="./src/08_map_init.js"></script>
   <script src="./src/09_march_helpers.js"></script>
   <script src="./src/10_ui_mount.js"></script>
+  <script src="./src/11a_main_progress_component.js"></script>
   <script src="./src/11_main_render_only_on_navigation_actions.js"></script>
   <script src="./src/12_main_actions.js"></script>
   <script src="./src/13_map_handlers.js"></script>
